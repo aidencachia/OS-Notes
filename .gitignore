@@ -2,5 +2,6 @@
 *.aux
 *.fls
 *.out
-*.synctex_gz
+*.synctex.gz
+*.fdb_latexmk
 *.toc
