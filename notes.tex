@@ -1,0 +1,292 @@
+
+
+\documentclass[]{article}
+\usepackage[sfdefault]{FiraSans} %% option 'sfdefault' activates Fira Sans as the default text font
+\usepackage[T1]{fontenc}
+
+\renewcommand*\oldstylenums[1]{{\firaoldstyle #1}}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows, positioning}
+
+\setlength\parindent{0pt}
+\setlength{\parskip}{0.5\baselineskip}
+
+\begin{document}
+\title{Operating Systems and Systems Programming I (\emph{CPS1012})\\ Short Notes}
+\author{Aiden Cachia}
+\date{}
+
+\maketitle
+\tableofcontents
+\pagebreak
+
+\section{Intoduction}
+
+\subsubsection*{What is an Operating System?}
+
+An Operating System is a program that acts as an intermediary between a user of a computer and the computer hardware.
+
+\subsubsection*{Operating System Goals}
+
+\begin{itemize}
+    \item Execute user programs and make solving user problems easier.
+    \item Make the computer system convenient to use.
+    \item Use the computer hardware in an efficient manner.
+\end{itemize}
+
+\subsubsection*{Computer System Structure}
+\begin{itemize}
+    \item Hardware.
+    \item Operating System.
+    \item Application programs.
+    \item Users.
+\end{itemize}
+
+\subsection{Operating System Services}
+
+\begin{itemize}
+    \item User Interface (CLI, GUI, Touch-screen, batch)
+    \item Program Execution
+    \item I/O Operations
+    \item File-system manipulation
+    \item Communications (On Device, Network)
+    \item Error Detection
+    \item Resource Allocation
+    \item Protection and Security
+\end{itemize}
+
+\subsubsection*{Command Line Interface}
+
+Simple Interface where command is fetched from user, it is exectued and the output is displayed.
+
+\subsubsection*{Graphical User Interface}
+More user friendly design, making use of;
+\begin{itemize}
+    \item Mosue, Keyboard and monitor
+    \item Icons representing files, programs, actions etc \dots
+    \item Menus
+\end{itemize}
+
+\subsection{System Calls}
+
+Ways to interact with the Operating System. They are typically written in a high level language (C or C++) and are used to request a service from the Operating System.
+
+\subsubsection*{Implementation of System Calls}
+
+\begin{itemize}
+    \item A table of all is usualy stored in the System-call interface.
+    \item The System-call invokes the system-call in OS kernel and returns the status of the system-call and any return values.
+\end{itemize}
+
+\subsubsection*{System Call Parameters}
+
+\begin{itemize}
+    \item Registers
+    \item Block/table
+    \item Stack
+\end{itemize}
+
+\subsubsection*{Types of System Calls}
+
+\emph{Process Control}
+\begin{itemize}
+    \item Create process, terminate process
+    \item End, abort
+    \item Load, execute
+    \item Get process attributes, set process attributes
+    \item Wait for time
+    \item Wait for event, signal event
+    \item Allocate and free memory
+    \item Dump memory
+    \item Debugging
+    \item Locking
+\end{itemize}
+
+\emph{File Management}
+\begin{itemize}
+    \item Create file, delete file
+    \item Open, close
+    \item Read, write, reposition
+    \item Get file attributes, set file attributes
+\end{itemize}
+
+\emph{Device Management}
+\begin{itemize}
+    \item Request device, release device
+    \item Read, write, reposition
+    \item Get device attributes, set device attributes
+    \item Logically attach or detach devices
+\end{itemize}
+
+\emph{Information Maintenance}
+\begin{itemize}
+    \item Get or set 
+    \begin{itemize}
+        \item time or date
+        \item system data
+        \item process, file or device attributes
+    \end{itemize}
+\end{itemize}
+
+\emph{Communications}
+\begin{itemize}
+    \item Create, delete communication connection
+    \item Send, receive messages
+    \item Shared memory
+    \item Transfer status information
+    \item Attach or detach remote devices
+\end{itemize}
+\pagebreak
+
+\subsection{System Services}
+
+Helps in the development of programs. Some are just system-call interfaces, others more complex.
+
+\subsubsection*{Types of System Services}
+\begin{itemize}
+    \item File management
+        \subitem Create, delete, copy, rename, print, dump, lis and generaslly manipulate files and directories.
+    \item Status information
+    \begin{itemize}
+        \item Basic information (date, time, amount of available memory, disk space, number of users).
+        \item Detailed logging and Debugging information.
+        \item Registry to store and retrieve configuration information.
+        \item File modification
+        \item Programming language support
+        \item Program loading and execution
+        \item Communications
+    \end{itemize}
+    \item Programming language support
+    \item Program loading and execution
+    \item Communications
+    \item Background services
+    \begin{itemize}
+        \item Launch at boot
+        \item Provides facilities like disk checking, process scheduling, error logging, printing.
+        \item Run in user context not kernel context
+        \item Known as \emph{services}, \emph{subsystems} or \emph{daemons}
+    \end{itemize}
+    \item Application programs
+    \begin{itemize}
+        \item Unrelated to system
+        \item Run by users
+        \item Not part of OS
+        \item Launched by CLI, Mouse click, finger poke
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{Linkers and Loaders}
+
+A Linker is used to link multiple object files (compiled from source code) into a single executable file.
+
+A Loader is used to load the executable file into memory and start the execution of the program.
+
+Relocation is the process of adjusting the addresses in the object file to match the addresses in memory.
+
+Dynamic linked libraries (DLLs) are libraries that are linked at runtime, rather than at compile time, so they could be used by multiple programs that would require the same version of the library.
+
+\subsubsection*{Why Applications are Operating System Specific}
+System calls and file formats are different from one operating system to another, among other things. Because of this applications are not portable between operating systems without modification.
+
+Applications can be made portable:
+\begin{itemize}
+    \item By using an interpreted language such as Python or Ruby;
+    \item By using a language which include a VM such as Java;
+    \item By using compiling a program which a User standard language (such as C), then recompiling it in target OSes.
+\end{itemize}
+
+An Application Binary Interface (ABI) is a specification defining requirements for an application on a specific hardware platform.
+
+\subsection{Operating System Design}
+There is no correct way to design an Operating System, but there are some common design principles.
+
+An OS should have User goals (ease of use, convience, etc \dots) and System goals (efficiency, security, etc \dots).
+
+\subsubsection*{Policy and Mechanism}
+
+\emph{Policy} is what will be done, \emph{Mechanism} is how it will be done.
+
+They should be seperate, as it would allow for maximum flexibility if policy decisioons are to be chanced later.
+
+\subsubsection*{Implementation}
+
+Early OSes were written in Assembly, but now they only have the base of the OS writen in Assembly, and the rest written in high level languages such as C or C++.
+
+Emulation allows for OS to ron on non-native hardware.
+
+\subsubsection*{The Kernel}
+
+The Kernel is the core of the OS, which is used to manage system resources and provides essential services for all other parts of the OS and user-level programs.
+
+Handles tasks such as:
+\begin{itemize}
+    \item Process management;
+    \item Memory management;
+    \item Scheduling;
+    \item Interfacing with hardware devices.
+\end{itemize}
+
+\subsubsection*{Operating System Structure}
+
+\begin{itemize}
+    \item Simple Structure - MS-DOS
+    \item More complex - UNIX
+    \item Layered - an abstraction
+    \item Microkernel - Mach
+\end{itemize}
+
+\subsubsection*{Monolithic - OG Unix}
+
+\emph{Structure}
+\begin{itemize}
+    \item System Programs
+    \item The kernel, which contains everything between the system-call interface and the hardware, providing File system, CPU scheduling, memory management, etc \dots
+\end{itemize}
+
+\subsubsection*{Layered}
+
+Like an Onion, the Core being Hardware (Layer 0), and the outer being the User Interface (Layer N). Each layer only has access to the layers below it.
+
+\subsubsection*{Microkernel}
+
+A microkernel is the near-minimum amount of software that can provide the mechanisms needed to implement an OS.
+
+\subsubsection*{Modules}
+
+Most modern OSes maks use of Loadable Kernel Modules (LKMs) which can be loaded and unloaded at runtime, Each:
+\begin{itemize}
+    \item uses Object-oriented approach;
+    \item core component is seperate;
+    \item talks to the other over known interfaces;
+    \item is loadable as needed within the kernel.
+\end{itemize}
+
+\subsubsection*{Hybrid Systems}
+
+Most modern OSes are hybrids of the above systems inorder to address performance, security and usability needs.
+
+\subsubsection*{Dual-mode Operation}
+
+Dual-mode operation allows OS to protect itself and other system components.
+
+\emph{Mode bit} is used to distinguish between user and kernel mode, which is provided by hardware.
+
+\section{Processes}
+
+A \emph{process} is a program in execution. 
+
+Its execution must be sequential. No parallel executution of a single process.
+
+A program becomes a process once it is \textbf{active} and \textbf{loaded into memory} 
+
+\end{document}
