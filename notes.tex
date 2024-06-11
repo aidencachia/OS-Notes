@@ -21,6 +21,8 @@
 \setlength\parindent{0pt}
 \setlength{\parskip}{0.5\baselineskip}
 
+\usepackage{amssymb}
+
 \begin{document}
 \title{Operating Systems and Systems Programming I (\emph{CPS1012})\\ Short Notes}
 \author{Aiden Cachia}
@@ -72,7 +74,7 @@ Simple Interface where command is fetched from user, it is exectued and the outp
 \subsubsection*{Graphical User Interface}
 More user friendly design, making use of;
 \begin{itemize}
-    \item Mosue, Keyboard and monitor
+    \item Mouse, Keyboard and monitor
     \item Icons representing files, programs, actions etc \dots
     \item Menus
 \end{itemize}
@@ -85,7 +87,7 @@ Ways to interact with the Operating System. They are typically written in a high
 
 \begin{itemize}
     \item A table of all is usualy stored in the System-call interface.
-    \item The System-call invokes the system-call in OS kernel and returns the status of the system-call and any return values.
+    \item The System-call interface invokes the system-call in OS kernel and returns the status of the system-call and any return values.
 \end{itemize}
 
 \subsubsection*{System Call Parameters}
@@ -146,7 +148,6 @@ Ways to interact with the Operating System. They are typically written in a high
     \item Transfer status information
     \item Attach or detach remote devices
 \end{itemize}
-\pagebreak
 
 \subsection{System Services}
 
@@ -155,18 +156,18 @@ Helps in the development of programs. Some are just system-call interfaces, othe
 \subsubsection*{Types of System Services}
 \begin{itemize}
     \item File management
-        \subitem Create, delete, copy, rename, print, dump, lis and generaslly manipulate files and directories.
+        \subitem Create, delete, copy, rename, print, dump, list and generally manipulate files and directories.
     \item Status information
     \begin{itemize}
         \item Basic information (date, time, amount of available memory, disk space, number of users).
         \item Detailed logging and Debugging information.
         \item Registry to store and retrieve configuration information.
         \item File modification
-        \item Programming language support
         \item Program loading and execution
         \item Communications
     \end{itemize}
-    \item Programming language support
+    \item Programming language support (Compilers, assemblers,
+    debuggers and interpreters sometimes provided)
     \item Program loading and execution
     \item Communications
     \item Background services
@@ -216,13 +217,13 @@ An OS should have User goals (ease of use, convience, etc \dots) and System goal
 
 \emph{Policy} is what will be done, \emph{Mechanism} is how it will be done.
 
-They should be seperate, as it would allow for maximum flexibility if policy decisioons are to be chanced later.
+They should be seperate, as it would allow for maximum flexibility if policy decisions are to be chanced later.
 
 \subsubsection*{Implementation}
 
 Early OSes were written in Assembly, but now they only have the base of the OS writen in Assembly, and the rest written in high level languages such as C or C++.
 
-Emulation allows for OS to ron on non-native hardware.
+Emulation allows for OS to run on non-native hardware.
 
 \subsubsection*{The Kernel}
 
@@ -261,6 +262,13 @@ Like an Onion, the Core being Hardware (Layer 0), and the outer being the User I
 
 A microkernel is the near-minimum amount of software that can provide the mechanisms needed to implement an OS.
 
+\begin{itemize}
+    \item Easier to extend a microkernel
+    \item Easier to port the operating system to new architecture
+    \item More reliable (less code is running in kernel mode)
+    \item More secure
+\end{itemize}
+
 \subsubsection*{Modules}
 
 Most modern OSes maks use of Loadable Kernel Modules (LKMs) which can be loaded and unloaded at runtime, Each:
@@ -287,6 +295,106 @@ A \emph{process} is a program in execution.
 
 Its execution must be sequential. No parallel executution of a single process.
 
-A program becomes a process once it is \textbf{active} and \textbf{loaded into memory} 
+A program becomes a process once it is \textbf{active} and \textbf{loaded into memory}.
+
+One program can have several processes. Consider mulitple users executing the same program.
+
+\subsubsection*{Process Composition}
+
+\begin{itemize}
+    \item \emph{Text Section} - Program code
+    \item \emph{Currect Activity} - Program counter, CPU registers
+    \item \emph{Data Section} - Global variables
+    \item \emph{Stack} - Temporary data (function parameters, return addresses, etc \dots)
+    \item \emph{Heap} - Dynamically allocated memory
+\end{itemize}
+
+\subsubsection*{Process State}
+
+\begin{itemize}
+    \item \emph{New} - Process is being created
+    \item \emph{Running} - Instructions are being executed
+    \item \emph{Waiting} - Process is waiting for some event to occur
+    \item \emph{Ready} - Process is waiting to be assigned to a processor
+    \item \emph{Terminated} - Process has finished execution
+\end{itemize}
+
+\subsubsection*{Process Control Block}
+
+\begin{itemize}
+    \item \emph{Process State} - New, Ready, Running, Waiting, Terminated
+    \item \emph{Program Counter} - Address of next instruction to be executed
+    \item \emph{CPU Registers} - contents of all process-centric registers
+    \item \emph{CPU Scheduling Information} - Priority, pointers to scheduling queues
+    \item \emph{Memory Management Information} - Page tables, segment tables (memory allocated to the process)
+    \item \emph{Accounting Information} - Amount of CPU and real time used, time limits, account numbers
+    \item \emph{I/O Status Information} - List of I/O devices allocated to the process, list of open files
+\end{itemize}
+
+\subsubsection*{Threading}
+
+TBD
+
+\subsection{Process Scheduling}
+
+The process scheduler selects whoch process to run in a way to maimize CPU utilization and throughput.
+
+The Scheduler would have a \textbf{ready} queue with all processes in the ready state and a \textbf{wait} queue with all processes in the waiting state. The Processes migrate between the two queues. 
+
+\subsubsection*{Context Switch}
+
+When the CPU switches to another process, the system must save the state of the old process and load the saved state for the next process via a context switch.
+
+Context-switch time is pure overhead; the system does no useful work while switching. The more complex the OS and the PCB, the longer the context switch time.
+
+
+The time is dependent on hardware support. Some hardware provides multiple sets of registers per CPU so multiple contexts can be loaded at once.
+
+\subsubsection*{Process Creation}
+
+Process makes process which is his child, and those child create more child, making tree.
+Process have a unique process ID, and is managed by it.
+
+The options for resource sharing are:
+\begin{itemize}
+    \item Child Resources $=$ Parent Resources
+    \item Child Resources $\subset$ Parent Resources
+    \item Child Resources $\nsubseteq$ Parent Resources 
+\end{itemize}
+
+The options for execution are:
+\begin{itemize}
+    \item Parent and child execute concurrently
+    \item Parent waits until child terminates
+\end{itemize}
+
+A child process is either a copy of the parent process or a new program.
+
+\verb|fork()| Creates a new process by duplicating the calling process. 
+
+\verb|exec()| system call used after a \verb|fork()| to replace the process’ memory space with a new program
+
+Parent process calls \verb|wait()| waiting for the child to terminate
+
+Process executes last statement and then asks the operating system to delete it using the \verb|exit()| system call
+
+Parent may terminate the execution of children processing using the \verb|abort()| system call. Some reasons for doing so:
+
+\begin{itemize}
+    \item Child has exceeded allocated resources
+    \item Task assigned to child is not longer required
+    \item The parent is exiting and the OS does not allow a child to continue if its parent terminates
+\end{itemize}
+
+Termination of a tree could be cascading or non-cascading.
+\begin{itemize}
+    \item Cascading - Parent process terminates all children
+    \item Non-cascading - Parent process terminates, children continue to be terminated by the OS as it relizes the parent is gone.
+\end{itemize}
+
+If no parent is waiting (did not invoke \verb|wait()|) the process
+becomes a zombie.
+If the parent terminated without invoking \verb|wait()|, the
+process becomes and orphan.
 
 \end{document}
