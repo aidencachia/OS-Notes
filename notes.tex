@@ -694,4 +694,110 @@ Messages can be buffered by using a queue of message attached to the link. Imple
     \item \emph{Unbounded Capacity} - Messages are never lost. Sender never waits.
 \end{enumerate}
 
+\subsection{Threads}
+
+A \emph{thread} is a basic unit of CPU utilization. It comprises a thread ID, program counter, register set, and stack. It shares with other threads belonging to the same process its code section, data section, and other operating system resources, such as open files and signals. Most modern applications are multithreaded.
+
+Some example tasks that can be done with threads are:
+\begin{itemize}
+    \item Updating the display
+    \item Fetching data
+    \item Answering a network request
+\end{itemize}
+
+It is less expensive to create a thread than a process. Threads can be created by the OS or by the process itself. Threads could also simply code and increase efficiency. Kernals are generally multithreaded.
+
+\subsubsection*{Benefits of Threads}
+
+\begin{itemize}
+    \item \emph{Responsiveness} - may allow continued execution if part of the process is blocked, especially important for user interfaces.
+    \item \emph{Resource Sharing} - Threads share resources of the process to which they belong, which is easier than shared memory or message passing.
+    \item \emph{Economy} - Creating a thread is cheaper than creating a process, as threads switching lower overhead than context switching.
+    \item \emph{Scalability} - Threads can be used to take advantage of multicore architectures.
+\end{itemize}
+
+\subsubsection*{Multicore Programming}
+
+Multicore systems put pressure on programmers as they must consider to following when writing code:
+
+\begin{itemize}
+    \item Dividing activities
+    \item Balance 
+    \item Data splitting
+    \item Data dependency
+    \item Testing and debugging
+\end{itemize}
+
+\textbf{Parallelism} implies a system can perform multiple tasks simultaneously. \textbf{Concurrency} implies a system can support multiple tasks making progress. Single processor/core, scheduler providing concurrency.
+
+\subsubsection*{Types of Parallelism}
+\begin{itemize}
+    \item \emph{Data Parallelism} - Distributing subsets of the same data across multiple cores and performing the same operation on each core.
+    \item \emph{Task Parallelism} - Distributing threads across multiple cores, each performing unique operations.
+\end{itemize}
+
+\subsubsection*{User Threads and Kernel Threads}
+
+\emph{User Threads} are managed by the user-level thread libraries (such as POSIX Pthreads, Windows threads and Java threads) and not the OS. The OS knows nothing about the threads and manages them as if they were single-threaded processes.
+
+\emph{Kernel Threads} are supported by the OS and are visible to the OS. The OS schedules the threads and manages them as it would processes.
+
+\subsubsection*{Multithreaded Models}
+
+\begin{itemize}
+    \item \emph{Many-to-One}
+    \begin{itemize}
+        \item Many user-level threads mapped to a single kernel thread.
+        \item If a thread makes a blocking system call, the entire process blocks.
+        \item Multiple threads may not run in parallel on multicore systems because only one may be in the kernel at a time
+        \item Few Systems use this model.
+    \end{itemize}
+    \item \emph{One-to-One}
+    \begin{itemize}
+        \item Each user-level thread maps to a kernel thread.
+        \item Creating a user-level thread creates a kernel thread.
+        \item More concurrency than many-to-one.
+        \item The number of threads per process is sometimes restricted due to overhead.
+        \item Windows and Linux use this model.
+    \end{itemize}
+    \item \emph{Many-to-Many}
+    \begin{itemize}
+        \item Allows many user-level threads to be mapped to many kernel threads.
+        \item Allows the OS to create a sufficient number of kernel threads.
+        \item Not very common
+    \end{itemize}
+\end{itemize}
+
+\subsection{Threading issues}
+
+Does \verb|fork()| duplicate only the calling thread or all threads? Some UNIXes have two versions of \verb|fork()|.
+
+\verb|exec()| usually works as normal, it replaces the running process including all threads.
+
+\subsubsection*{Thread Cancellation}
+
+This issue arises when one thread needs to terminate another before it has finished. There are two types of thread cancellation:
+
+\begin{itemize}
+    \item \emph{Asynchronous Cancellation} - One thread immediately terminates the target thread.
+    \item \emph{Deferred Cancellation} - The target thread periodically checks if it should be cancelled.
+\end{itemize}
+
+On Linux systems, thread cancellation is handled through signals.
+
+\subsubsection*{Thread Local Storage}
+
+Each thread has its own copy of data. This is useful when a global variable is needed by all threads, but each thread needs its own copy.
+
+\subsubsection*{Scheduler Activations}
+
+Many-to-many models require communication to maintain the appropriate number of kernel threads allocated for the application. Typically use an intermediate data structure between user and kernel threads - lightweight process (LWP)
+
+\begin{itemize}
+    \item Appears to be a virtual processor on which a process can schedule user thread to run.
+    \item Each LWP is attached to a kernel thread
+\end{itemize}
+
+Scheduler activations provide upcalls, a communication mechanism from the kernel to the upcall handler in the thread library. This communication allows an application to maintain the correct number kernel threads.
+
 \end{document}
